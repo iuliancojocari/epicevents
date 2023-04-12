@@ -1,12 +1,35 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
+from rest_framework.exceptions import PermissionDenied
+
+MANAGEMENT = "Management"
+SALES = "Sales"
+SUPPORT = "Support"
+
+MAXIMUM_TEAMS = 3
+
+
+class Team(models.Model):
+    name = models.CharField(_("Team name"), max_length=10)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *arg, **kwargs):
+        if Team.objects.all().count() <= MAXIMUM_TEAMS or self.pk is not None:
+            raise PermissionDenied(
+                detail="You are not authorized to create a new team."
+            )
+
+    def delete(self, using=None, keep_parents=False):
+        raise PermissionDenied(detail="You are not authorized to delete the team.")
 
 
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
-    def _create_user(self, email, password, **extra_fields):
+    def _create_user(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError("Users require an email field")
         email = self.normalize_email(email)
@@ -32,13 +55,6 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class Team(models.Model):
-    name = models.CharField(_("Team Name"), max_length=25)
-
-    def __str__(self):
-        return self.name
-
-
 class User(AbstractUser):
     username = None
     first_name = models.CharField(_("First Name"), max_length=25, blank=False)
@@ -46,12 +62,24 @@ class User(AbstractUser):
     email = models.EmailField(_("Email address"), unique=True, blank=False)
     phone = models.CharField(_("Phone"), max_length=20, blank=True)
     mobile = models.CharField(_("Mobile"), max_length=20, blank=True)
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True)
+    team = models.ForeignKey(Team, on_delete=models.PROTECT, default=1)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["first_name", "last_name"]
 
     objects = UserManager()
 
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
-
     def __str__(self):
-        return f"{self.first_name} {self.last_name} | {self.email}"
+        return f"{self.first_name} {self.last_name} | {self.team}"
+
+    def save(self, *args, **kwargs):
+        if self.team.name == MANAGEMENT:
+            self.is_staff = True
+            self.is_superuser = True
+        else:
+            self.is_staff = False
+            self.is_superuser = False
+
+        user = super(User, self).save()
+
+        return user
