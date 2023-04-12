@@ -16,8 +16,9 @@ class UserAdmin(BaseUserAdmin):
         ("Login", {"fields": ["email", "password"]}),
         ("User", {"fields": ["first_name", "last_name", "phone", "mobile"]}),
         ("Permissions", {"fields": ["team"]}),
+        ("Dates", {"fields": ["date_joined", "last_login"]}),
     ]
-
+    readonly_fields = ("date_joined", "last_login")
     add_fieldsets = [
         (
             "User Information",
