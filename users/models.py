@@ -74,11 +74,11 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if self.team.name == MANAGEMENT:
-            self.is_staff = True
             self.is_superuser = True
-        else:
-            self.is_staff = False
-            self.is_superuser = False
+            self.is_staff = True
+
+        if self.team.name == SALES or SUPPORT:
+            self.is_staff = True
 
         user = super(User, self).save()
 
