@@ -7,7 +7,7 @@ MANAGEMENT = "Management"
 SALES = "Sales"
 SUPPORT = "Support"
 
-MAXIMUM_TEAMS = 3
+MAX_TEAMS = 3
 
 
 class Team(models.Model):
@@ -17,7 +17,7 @@ class Team(models.Model):
         return self.name
 
     def save(self, *arg, **kwargs):
-        if Team.objects.all().count() <= MAXIMUM_TEAMS or self.pk is not None:
+        if Team.objects.all().count() <= MAX_TEAMS or self.pk is not None:
             raise PermissionDenied(
                 detail="You are not authorized to create a new team."
             )
@@ -62,7 +62,9 @@ class User(AbstractUser):
     email = models.EmailField(_("Email address"), unique=True, blank=False)
     phone = models.CharField(_("Phone"), max_length=20, blank=True)
     mobile = models.CharField(_("Mobile"), max_length=20, blank=True)
-    team = models.ForeignKey(Team, on_delete=models.PROTECT, default=1)
+    team = models.ForeignKey(
+        Team, on_delete=models.PROTECT, default=1, related_name="team_name"
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -75,9 +77,6 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if self.team.name == MANAGEMENT:
             self.is_superuser = True
-            self.is_staff = True
-
-        if self.team.name == SALES or SUPPORT:
             self.is_staff = True
 
         user = super(User, self).save()

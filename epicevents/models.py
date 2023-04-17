@@ -15,7 +15,7 @@ class Client(models.Model):
     company_name = models.CharField(_("Company name"), max_length=250, blank=False)
     is_client = models.BooleanField(_("Is client ?"), default=False)
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
-    date_updated = models.DateTimeField(_("Date updated"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date updated"), auto_now=True)
     sales_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -29,7 +29,7 @@ class Client(models.Model):
 
 class Contract(models.Model):
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
-    date_updated = models.DateTimeField(_("Date updated"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date updated"), auto_now=True)
     status = models.BooleanField(_("Is signed"), default=False)
     amount = models.FloatField(_("Amount"), blank=False)
     payment_due = models.DateField(_("Payment due"), blank=False)
@@ -40,7 +40,7 @@ class Contract(models.Model):
         related_name="contract_sales_contact",
     )
     client = models.ForeignKey(
-        to=Client, on_delete=models.CASCADE, related_name="client"
+        to=Client, on_delete=models.CASCADE, related_name="contract"
     )
 
     def __str__(self):
@@ -49,13 +49,13 @@ class Contract(models.Model):
 
 class Event(models.Model):
     date_created = models.DateTimeField(_("Date created"), auto_now_add=True)
-    date_updated = models.DateTimeField(_("Date updated"), auto_now_add=True)
+    date_updated = models.DateTimeField(_("Date updated"), auto_now=True)
     event_status = models.BooleanField(_("Event status"), default=False)
     attendees = models.IntegerField(_("Attendees"), validators=[MinValueValidator(1)])
     event_date = models.DateField(_("Event date"), blank=False)
     notes = models.TextField(_("Event notes"), blank=True)
     client_contract = models.ForeignKey(
-        to=Contract, on_delete=models.CASCADE, related_name="client_contract"
+        to=Contract, on_delete=models.CASCADE, related_name="event"
     )
     support_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
