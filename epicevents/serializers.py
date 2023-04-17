@@ -40,23 +40,3 @@ class EventSerilizer(serializers.ModelSerializer):
         event = Event.objects.create(**validated_data)
         event.save()
         return event
-
-
-"""
-event_status = validated_data["event_status"],
-            attendees = validated_data["attendees"],
-            event_date = validated_data["event_date"],
-            notes = validated_data["notes"],
-            client_contract = validated_data["client_contract"],
-            support_contact = validated_data["support_contact"]
-
-
-
-
-status=validated_data["status"],
-            amount=validated_data["amount"],
-            payement_due=validated_data["payment_due"],
-            sales_contact=self.context["request"].user,
-            client=validated_data["client"],
-
-"""
