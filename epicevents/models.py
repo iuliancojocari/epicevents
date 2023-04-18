@@ -24,7 +24,7 @@ class Client(models.Model):
     )
 
     def __str__(self):
-        return f"{self.first_name} {(self.sales_contact.first_name)}"
+        return f"{self.first_name} {self.last_name}"
 
 
 class Contract(models.Model):

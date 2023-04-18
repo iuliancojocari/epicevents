@@ -48,6 +48,7 @@ class ContractViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = [
+        "^client__first_name",
         "^client__last_name",
         "^client__email",
         "^date_created",
@@ -76,20 +77,24 @@ class EventViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "post", "put", "delete"]
     filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = [
-        "^contract__client__first_name",
-        "^contract__client__last_name",
-        "^contract__client__email",
+        "^client_contract__client__first_name",
+        "^client_contract__client__last_name",
+        "^client_contract__client__email",
         "^event_date",
     ]
-    filterset_fields = ["date_created", "status"]
+    filterset_fields = ["date_created", "event_status"]
 
     def get_queryset(self):
         if self.request.user.team.name == SUPPORT:
             return Event.objects.filter(support_contact=self.request.user)
+        elif self.request.user.team.name == SALES:
+            return Event.objects.filter(client_contract__sales_contact=self.request.user)
+        return Event.objects.all()
 
     def destroy(self, request, *args, **kwargs):
-        event = get_object_or_404(Event, id=self.kwargs["id"])
+        event = get_object_or_404(Event, id=self.kwargs["pk"])
         event.delete()
         return Response(
             {"detail": "Event successfully deleted."}, status=status.HTTP_202_ACCEPTED
         )
+
