@@ -44,7 +44,7 @@ class Contract(models.Model):
     )
 
     def __str__(self):
-        return f"{self.client}"
+        return f'{self.client}'
 
 
 class Event(models.Model):
@@ -65,4 +65,4 @@ class Event(models.Model):
     )
 
     def __str__(self):
-        return f"{self.client_contract}"
+        return f'{self.client_contract.client}'

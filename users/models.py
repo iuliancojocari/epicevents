@@ -72,7 +72,7 @@ class User(AbstractUser):
     objects = UserManager()
 
     def __str__(self):
-        return f"{self.first_name} {self.last_name} | {self.team}"
+        return f"{self.first_name} {self.last_name}"
 
     def save(self, *args, **kwargs):
         if self.team.name == MANAGEMENT:
