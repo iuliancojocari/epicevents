@@ -44,3 +44,36 @@ Pour la liste des points de terminaison de l'API Epic Events veuillez vous réf�
 ```shell
     pip install -r requirements.txt
 ```
+
+- Créer une base de données dans Pgadmin
+
+- Configuration de la base de données au niveau du projet Django
+    1. Aller dans le fichier `settings.py`
+    2. Trouver la variable appelée `DATABASES`
+    3. Modifier les valeurs : 
+        + `"ENGINE": "django.db.backends.postgresql_psycopg2"`
+        + `"NAME": "nom_base_de_donnee"`
+        + `"USER": "username"`
+        + `"PASSWORD": "mot_de_passe"`
+        + `"HOST": "hostname ou adresse ip du serveur de base de donénes"`
+        + `"PORT": "port"`
+
+- Réaliser les migrations Django
+```shell
+    python manage.py makemigrations
+    python manage.py migrate
+```
+
+## Utilisation de l'application 
+
+- Pour lancer le serveur
+```shell
+    python manage.py runserver
+```
+
+- Créer un superutilisateur pour pouvoir accèder au site d'aministration
+```shell
+    python manage.py createsuperuser
+```
+
+Voici le lien pour accèder au site d'administration : `http://127.0.0.1:8000/admin`
