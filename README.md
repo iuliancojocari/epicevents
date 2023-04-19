@@ -11,7 +11,7 @@ Les utilisateurs Epic Events peuvent :
 
 ## Documentation de l'API (Liste des points de terminaison)
 
-Pour la liste des points de terminaison de l'API Epic Events veuillez vous référer à cette documentation : [Documentation Postman](https://linktodocumentation)
+Pour la liste des points de terminaison de l'API Epic Events veuillez vous référer à cette documentation : [Documentation Postman](https://documenter.getpostman.com/view/15044832/2s93Y2RM8W)
 
 
 ## Prérequis
@@ -77,3 +77,4 @@ Pour la liste des points de terminaison de l'API Epic Events veuillez vous réf�
 ```
 
 Voici le lien pour accèder au site d'administration : `http://127.0.0.1:8000/admin`
+Pour pouvoir vous connecter, utilisez le compte que vous venez de créer
