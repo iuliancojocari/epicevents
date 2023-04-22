@@ -46,6 +46,14 @@ Pour la liste des points de terminaison de l'API Epic Events veuillez vous réf�
 ```
 
 - Créer une base de données dans Pgadmin
+```shell
+CREATE DATABASE epicevents
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+```
 
 - Configuration de la base de données au niveau du projet Django
     1. Créer un fichier .env à la racine du projet
