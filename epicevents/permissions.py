@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from rest_framework.exceptions import PermissionDenied
 from users.models import MANAGEMENT, SALES, SUPPORT
-ik
+
 
 class IsManager(permissions.BasePermission):
     def has_permission(self, request, view):
@@ -34,8 +34,8 @@ class ContractPermissions(permissions.BasePermission):
             return (
                 request.user == obj.support_contact or request.user == obj.sales_contact
             )
-        elif request.method == 'PUT': 
-            raise PermissionDenied('You cannot update a signed contract.')
+        elif request.method == "PUT":
+            raise PermissionDenied("You cannot update a signed contract.")
         return request.user == obj.sales_contact and obj.status is False
 
 
