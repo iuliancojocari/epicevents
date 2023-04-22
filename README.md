@@ -48,15 +48,15 @@ Pour la liste des points de terminaison de l'API Epic Events veuillez vous réf�
 - Créer une base de données dans Pgadmin
 
 - Configuration de la base de données au niveau du projet Django
-    1. Aller dans le fichier `settings.py`
-    2. Trouver la variable appelée `DATABASES`
-    3. Modifier les valeurs : 
-        + `"ENGINE": "django.db.backends.postgresql_psycopg2"`
-        + `"NAME": "nom_base_de_donnee"`
-        + `"USER": "username"`
-        + `"PASSWORD": "mot_de_passe"`
-        + `"HOST": "hostname ou adresse ip du serveur de base de donénes"`
-        + `"PORT": "port"`
+    1. Créer un fichier .env à la racine du projet
+    2. Définir les variables suivantes en ajoutant les valeurs que vous avez de votre côté
+        - USER=utilisateur_base_de_données
+        - PASSWORD=mot_de_passe_utilisateur_bdd
+        - DB_NAME=nom_bdd
+        - HOST=hôte_bdd
+        - PORT=port_bdd
+
+    Important : dans le même fichier vous devez ajouter les deux autres variables `SECRET_KEY=clé_secrète_pour_django` et `DEBUG=True`
 
 - Réaliser les migrations Django
 ```shell
