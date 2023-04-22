@@ -18,21 +18,13 @@ from users.models import SALES, SUPPORT
 
 
 class ClientViewSet(viewsets.ModelViewSet):
+    queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated, IsManager | ClientPermissions]
     http_method_names = ["get", "post", "put", "delete"]
     filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = ["^first_name", "^last_name", "^email"]
     filterset_fields = ["is_client", "date_created", "date_updated", "sales_contact"]
-
-    def get_queryset(self):
-        if self.request.user.team.name == SUPPORT:
-            return Client.objects.filter(
-                contract__event__support_contact=self.request.user
-            )
-        if self.request.user.team.name == SALES:
-            return Client.objects.filter(sales_contact=self.request.user)
-        return Client.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         client = get_object_or_404(Client, id=self.kwargs["pk"])
@@ -43,6 +35,7 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 
 class ContractViewSet(viewsets.ModelViewSet):
+    queryset = Contract.objects.all()
     serializer_class = ContractSerializer
     permission_classes = [IsAuthenticated, IsManager | ContractPermissions]
     http_method_names = ["get", "post", "put", "delete"]
@@ -56,12 +49,6 @@ class ContractViewSet(viewsets.ModelViewSet):
     ]
     filterset_fields = ["date_created", "status"]
 
-    def get_queryset(self):
-        if self.request.user.team.name == SALES:
-            return Contract.objects.filter(sales_contact=self.request.user)
-        elif self.request.user.team.name == SUPPORT:
-            return Contract.objects.filter(event__support_contact=self.request.user)
-
     def destroy(self, request, *args, **kwargs):
         contract = get_object_or_404(Contract, id=self.kwargs["pk"])
         contract.delete()
@@ -72,6 +59,7 @@ class ContractViewSet(viewsets.ModelViewSet):
 
 
 class EventViewSet(viewsets.ModelViewSet):
+    queryset = Event.objects.all()
     serializer_class = EventSerilizer
     permission_classes = [IsAuthenticated, IsManager | EventPermissions]
     http_method_names = ["get", "post", "put", "delete"]
@@ -83,15 +71,6 @@ class EventViewSet(viewsets.ModelViewSet):
         "^event_date",
     ]
     filterset_fields = ["date_created", "event_status"]
-
-    def get_queryset(self):
-        if self.request.user.team.name == SUPPORT:
-            return Event.objects.filter(support_contact=self.request.user)
-        elif self.request.user.team.name == SALES:
-            return Event.objects.filter(
-                client_contract__sales_contact=self.request.user
-            )
-        return Event.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         event = get_object_or_404(Event, id=self.kwargs["pk"])
