@@ -88,7 +88,9 @@ class EventViewSet(viewsets.ModelViewSet):
         if self.request.user.team.name == SUPPORT:
             return Event.objects.filter(support_contact=self.request.user)
         elif self.request.user.team.name == SALES:
-            return Event.objects.filter(client_contract__sales_contact=self.request.user)
+            return Event.objects.filter(
+                client_contract__sales_contact=self.request.user
+            )
         return Event.objects.all()
 
     def destroy(self, request, *args, **kwargs):
@@ -97,4 +99,3 @@ class EventViewSet(viewsets.ModelViewSet):
         return Response(
             {"detail": "Event successfully deleted."}, status=status.HTTP_202_ACCEPTED
         )
-
